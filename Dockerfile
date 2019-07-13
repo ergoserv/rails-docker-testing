@@ -1,4 +1,4 @@
-FROM ruby:2.5
+FROM ruby:2.6.3
 
 ENV APP_HOME /home/myappx
 
