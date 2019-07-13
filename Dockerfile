@@ -1,13 +1,16 @@
 FROM ruby:2.6.3
 
-ENV APP_HOME /home/myappx
+ARG app_name
+
+ENV APP_HOME /home/$app_name
+ENV DOCKER_HOME /home/docker
 
 # Container Setup
-RUN mkdir -p /home/docker
-COPY .docker/*.sh /home/docker/
-RUN chmod +x /home/docker/*.sh
-RUN /home/docker/setup.sh
-ENTRYPOINT ["/home/docker/docker-entrypoint.sh"]
+RUN mkdir -p $DOCKER_HOME/bin
+COPY ./docker/bin/*.sh $DOCKER_HOME/bin/
+RUN chmod +x $DOCKER_HOME/bin/*.sh
+RUN $DOCKER_HOME/bin/setup.sh
+ENTRYPOINT ["$DOCKER_HOME/bin/docker-entrypoint.sh"]
 EXPOSE 3000
 
 # Appplication Setup

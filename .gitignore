@@ -6,7 +6,9 @@
 
 # Ignore bundler config.
 /.bundle
-/.docker/volumes/*
+
+/docker/volumes/*
+!/docker/volumes/.keep
 
 # Ignore all logfiles and tempfiles.
 /log/*
