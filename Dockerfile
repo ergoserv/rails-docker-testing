@@ -1,16 +1,21 @@
 FROM ruby:2.5
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
-RUN mkdir /myapp
-WORKDIR /myapp
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
+
+ENV APP_HOME /home/myappx
+
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client zsh
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+COPY Gemfile /$APP_HOME/Gemfile
+COPY Gemfile.lock /$APP_HOME/Gemfile.lock
 RUN bundle install
-COPY . /myapp
+COPY . /$APP_HOME
 
 # Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+RUN mkdir -p /home/docker
+COPY .docker/entrypoint.sh /home/docker/
+RUN chmod +x /home/docker/entrypoint.sh
+ENTRYPOINT ["/home/docker/entrypoint.sh"]
 EXPOSE 3000
 
 # Start the main process.
